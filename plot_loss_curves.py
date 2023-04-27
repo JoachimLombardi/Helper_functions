@@ -2,6 +2,8 @@ def plot_loss_curves(history):
   """
   Returns separate loss curves for training and validation metrics.
   """
+  !pip install matplotlib
+
   import matplotlib.pyplot as plt
   loss = history.history["loss"]
   val_loss = history.history["val_loss"]

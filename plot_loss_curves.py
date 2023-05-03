@@ -1,6 +1,9 @@
 def plot_loss_curves(history):
   """
   Returns separate loss curves for training and validation metrics.
+  
+  Args:
+    history: TensorFlow History object.
   """
 
   import matplotlib.pyplot as plt

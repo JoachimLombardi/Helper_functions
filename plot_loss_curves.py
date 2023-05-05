@@ -67,7 +67,6 @@ def show_batches_images(images, labels, augmented_images=None, augmented_label=N
     plt.title(class_names[labels[j].argmax()])
   # Turn the grid lines off
   plt.axis("off")
-
   if (augmented_images is not None):
     # Setup the figure
     plt.figure(figsize=(10, 10))
@@ -144,3 +143,29 @@ def create_model(dir_name, experiment_name, model_url=classifier_model, num_clas
                       callbacks=[tensorboard])
 
   return model, history
+
+import os, datetime, pytz
+# Create a function to save a model
+def save_model(model, suffix=None):
+  """
+  Saves a given model in a models directory and appends a suffix (string).
+  """
+  # Create a model directory pathname with current time
+  tz = pytz.timezone('Europe/Paris')
+  modeldir = os.path.join("/content/drive/MyDrive/10_percent_food/save",
+                          datetime.datetime.now().astimezone(tz).strftime("%d%m%Y-%H%M%S"))
+  model_path = modeldir + "-" + suffix + ".h5" # Save format of model
+  print(f"Saving model to: {model_path}...")
+  model.save(model_path)
+  return model_path
+
+import tensorflow_hub as hub
+# Create a function to load a trained model
+def load_model(model_path):
+  """
+  Loads a saved model from a specified path.
+  """
+  print(f"Loading saved model from: {model_path}")
+  model = tf.keras.models.load_model(model_path,
+                                      custom_objects={"KerasLayer":hub.KerasLayer}) # first layer
+  return model

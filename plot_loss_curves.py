@@ -169,3 +169,20 @@ def load_model(model_path):
   model = tf.keras.models.load_model(model_path,
                                       custom_objects={"KerasLayer":hub.KerasLayer}) # first layer
   return model
+
+# Make it a function
+def load_and_prep_image(filename, img_shape=224):
+  """
+  Read an image from filename, turns it into a tensor and reshapes it to (img_shape, img_shape, color_channels). 
+  """
+  # Read in the image 
+  img = tf.io.read_file(filename)
+  # Decode the read file into a tensor
+  img = tf.image.decode_image(img)
+  # Resize the image
+  img = tf.image.resize(img, [img_shape, img_shape])
+  # Rescale the image (get all value between 0 and 1)
+  img = img/255.
+  # add a dim
+  img = tf.expand_dims(img, axis=0)
+  return img

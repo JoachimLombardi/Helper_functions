@@ -35,7 +35,7 @@ def plot_loss_curves(history):
 import matplotlib.pyplot as plt
 import random
 # Create a function for viewing images in a data batch
-def show_batches_images(images, labels, augmented_images=None, augmented_label=None):
+def show_batches_images(images, labels, class_names, augmented_images=None, augmented_label=None):
   """
   Displays a plot of random images and their labels from a data batch.
   """

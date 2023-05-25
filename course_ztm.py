@@ -293,6 +293,13 @@ import os, datetime, pytz
 def save_model(model, model_dir, suffix=None):
   """
   Saves a given model in a models directory and appends a suffix (string).
+  
+  Args:
+    model: model to save
+    model_dir: directory to save the model
+    suffix: name of the model
+
+  Returns model's path.
   """
   # Create a model directory pathname with current time
   tz = pytz.timezone('Europe/Paris')
@@ -308,6 +315,11 @@ import tensorflow_hub as hub
 def load_model(model_path):
   """
   Loads a saved model from a specified path.
+  
+  Args:
+   model_path: path to the model
+
+  Returns model.
   """
   print(f"Loading saved model from: {model_path}")
   model = tf.keras.models.load_model(model_path,

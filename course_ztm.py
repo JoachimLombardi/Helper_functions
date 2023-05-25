@@ -288,8 +288,9 @@ def calculate_results(y_true, y_pred):
                   "f1": model_f1}
   return model_results
 
-import os, datetime, pytz
 # Create a function to save a model
+import os, datetime, pytz
+
 def save_model(model, model_dir, suffix=None):
   """
   Saves a given model in a models directory and appends a suffix (string).
@@ -310,8 +311,9 @@ def save_model(model, model_dir, suffix=None):
   model.save(model_path)
   return model_path
 
-import tensorflow_hub as hub
 # Create a function to load a trained model
+import tensorflow_hub as hub
+
 def load_model(model_path):
   """
   Loads a saved model from a specified path.

@@ -287,3 +287,29 @@ def calculate_results(y_true, y_pred):
                   "recall": model_recall,
                   "f1": model_f1}
   return model_results
+
+import os, datetime, pytz
+# Create a function to save a model
+def save_model(model, model_dir, suffix=None):
+  """
+  Saves a given model in a models directory and appends a suffix (string).
+  """
+  # Create a model directory pathname with current time
+  tz = pytz.timezone('Europe/Paris')
+  modeldir = os.path.join(model_dir,
+                          datetime.datetime.now().astimezone(tz).strftime("%d%m%Y-%H%M%S"))
+  model_path = modeldir + "-" + suffix + ".h5" # Save format of model
+  print(f"Saving model to: {model_path}...")
+  model.save(model_path)
+  return model_path
+
+import tensorflow_hub as hub
+# Create a function to load a trained model
+def load_model(model_path):
+  """
+  Loads a saved model from a specified path.
+  """
+  print(f"Loading saved model from: {model_path}")
+  model = tf.keras.models.load_model(model_path,
+                                      custom_objects={"KerasLayer":hub.KerasLayer}) # first layer
+  return model

@@ -96,7 +96,7 @@ def show_batches_images(images, labels, class_names, augmented_images=None, augm
       plt.axis("off")
       
 # Let's make a create_model() function to create a model from a URL
-def create_model(dir_name, experiment_name, model_url=classifier_model, num_classes=10, loss="categorical_crossentropy", activation="softmax", epochs=5):
+def create_model(dir_name, experiment_name, model_url, num_classes=10, loss="categorical_crossentropy", activation="softmax", epochs=5):
   """
   Takes a TensorFlow Hub URL and creates a keras Sequential model with it.
 

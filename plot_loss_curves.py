@@ -160,6 +160,7 @@ def save_model(model, suffix=None):
   return model_path
 
 import tensorflow_hub as hub
+import tensorflow as tf
 # Create a function to load a trained model
 def load_model(model_path):
   """

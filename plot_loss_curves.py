@@ -152,7 +152,7 @@ def save_model(model, suffix=None):
   """
   # Create a model directory pathname with current time
   tz = pytz.timezone('Europe/Paris')
-  modeldir = os.path.join("/content/drive/MyDrive/10_percent_food/save",
+  modeldir = os.path.join("/content/drive/MyDrive/",
                           datetime.datetime.now().astimezone(tz).strftime("%d%m%Y-%H%M%S"))
   model_path = modeldir + "-" + suffix + ".h5" # Save format of model
   print(f"Saving model to: {model_path}...")

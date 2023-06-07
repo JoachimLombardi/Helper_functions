@@ -108,7 +108,37 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_s
   # Save the figure to the current working directory
   if savefig:
     fig.savefig("confusion_matrix.png")
-  
+ 
+# Create ModelCheckpoint callback to save model's progress
+def CreateModelCheckpoint(checkpoint_path)
+  """
+  Callback to save the Keras model or model weights at some frequency.
+  Args:
+    checkpoint_path: path to the file to save the weights.
+  Return:
+    model_checkpoint
+  """
+  model_checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_path,
+                                                        monitor="val_acc", # save the model weights with best validation accuracy
+                                                        save_best_only=True, # only save the best weights
+                                                        save_weights_only=True, # only save model weights (not whole model)
+                                                        verbose=0) # don't print out whether or not model is being saved 
+  return model_checkpoint
+
+# Create early stopping callback
+def create_early_stopping(monitor, patience):
+ """
+ Stop training when a monitored metric has stopped improving.
+ Args:
+  monitor: variable to monitor
+  patience:number of iteration with no improving of the monitored variable before it stops.
+ Return:
+  early_stopping
+ """
+ early_stopping = tf.keras.callbacks.EarlyStopping(monitor=monitor,
+                                                    patience=patience)
+ return early_stopping
+
 # Make a function to predict on images and plot them (works with multi-class)
 def pred_and_plot(model, filename, class_names):
   """

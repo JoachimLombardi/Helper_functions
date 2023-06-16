@@ -110,7 +110,7 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_s
     fig.savefig("confusion_matrix.png")
  
 # Create ModelCheckpoint callback to save model's progress
-def CreateModelCheckpoint(checkpoint_path)
+def CreateModelCheckpoint(checkpoint_path):
   """
   Callback to save the Keras model or model weights at some frequency.
   Args:

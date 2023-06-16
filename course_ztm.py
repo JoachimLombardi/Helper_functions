@@ -110,7 +110,7 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_s
     fig.savefig("confusion_matrix.png")
  
 # Create ModelCheckpoint callback to save model's progress
-def CreateModelCheckpoint(checkpoint_path):
+def CreateModelCheckpoint(checkpoint_path, monitor):
   """
   Callback to save the Keras model or model weights at some frequency.
   Args:
@@ -119,7 +119,7 @@ def CreateModelCheckpoint(checkpoint_path):
     model_checkpoint
   """
   model_checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_path,
-                                                        monitor="val_acc", # save the model weights with best validation accuracy
+                                                        monitor=monitor, # save the model weights with best validation accuracy
                                                         save_best_only=True, # only save the best weights
                                                         save_weights_only=True, # only save model weights (not whole model)
                                                         verbose=0) # don't print out whether or not model is being saved 

@@ -392,3 +392,41 @@ def plot_decision_boundary(model: torch.nn.Module, X: torch.Tensor, y: torch.Ten
     plt.scatter(X[:, 0], X[:, 1], c=y, s=40, cmap=plt.cm.RdYlBu)
     plt.xlim(xx.min(), xx.max())
     plt.ylim(yy.min(), yy.max())
+
+# Plot linear data or training and test and predictions (optional)
+def plot_predictions(
+    train_data, train_labels, test_data, test_labels, predictions=None
+):
+    """
+  Plots linear training data and test data and compares predictions.
+  """
+    plt.figure(figsize=(10, 7))
+
+    # Plot training data in blue
+    plt.scatter(train_data, train_labels, c="b", s=4, label="Training data")
+
+    # Plot test data in green
+    plt.scatter(test_data, test_labels, c="g", s=4, label="Testing data")
+
+    if predictions is not None:
+        # Plot the predictions in red (predictions were made on the test data)
+        plt.scatter(test_data, predictions, c="r", s=4, label="Predictions")
+
+    # Show the legend
+    plt.legend(prop={"size": 14})
+
+
+# Calculate accuracy (a classification metric)
+def accuracy_fn(y_true, y_pred):
+    """Calculates accuracy between truth labels and predictions.
+
+    Args:
+        y_true (torch.Tensor): Truth labels for predictions.
+        y_pred (torch.Tensor): Predictions to be compared to predictions.
+
+    Returns:
+        [torch.float]: Accuracy value between y_true and y_pred, e.g. 78.45
+    """
+    correct = torch.eq(y_true, y_pred).sum().item()
+    acc = (correct / len(y_pred)) * 100
+    return acc

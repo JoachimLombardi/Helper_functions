@@ -431,3 +431,96 @@ def accuracy_fn(y_true, y_pred):
     correct = torch.eq(y_true, y_pred).sum().item()
     acc = (correct / len(y_pred)) * 100
     return acc
+
+def train_test_loop(epochs: int,
+                    loss_fn: torch.nn.Module,
+                    optimizer: torch.optim.Optimizer,    
+                    model: torch.nn.Module,
+                    accuracy_fn=None,
+                    device: torch.device = device,
+                    X_train: torch.Tensor = X_train,
+                    y_train: torch.Tensor = y_train,
+                    X_test: torch.Tensor = X_test,
+                    y_test: torch.Tensor = y_test,
+                    epoch_display_frequency=10,
+                    multiclass=False):
+    """Trains and test a PyTorch model."""
+    torch.manual_seed(42)
+    torch.cuda.manual_seed(42)
+
+    # Put data to target device
+    X_train, y_train = X_train.to(device), y_train.to(device)
+    X_test, y_test = X_test.to(device), y_test.to(device)
+
+    # Build training and evaluation loop
+    for epoch in range(epochs):
+        ### TRAINING
+        model.train() # train mode is on by default after construction
+
+        # 1. Forward pass
+        if accuracy_fn is not None and multiclass is False:
+            y_logits = model(X_train).squeeze()
+            y_pred = torch.round(torch.sigmoid(y_logits)) # logits -> prediction probabilities -> prediction labels
+        elif multiclass:
+            y_logits = model(X_train.to(torch.float32))
+            y_pred = torch.softmax(y_logits, dim=1).argmax(dim=1)
+        else:
+            y_pred = model(X_train)
+
+        # 2. Calculate loss and accuracy
+        if accuracy_fn is None:
+            loss = loss_fn(y_pred, y_train)
+        else:
+            loss = loss_fn(y_logits,
+                           y_train) 
+            acc = accuracy_fn(y_true=y_train,
+                              y_pred=y_pred)
+        
+        # 3. Optimizer zero grad
+        optimizer.zero_grad()
+
+        # 4. Loss backward
+        loss.backward()
+
+        # 5. Optimizer step (gradient descent)
+        optimizer.step()
+
+        ### TESTING
+        model.eval() # put the model in evaluation mode
+        with torch.inference_mode():
+            # 1. Forward pass
+            if accuracy_fn is not None and multiclass is False:
+                test_logits = model(X_test).squeeze()
+                test_pred = torch.round(torch.sigmoid(test_logits))
+            elif multiclass:
+                test_logits = model(X_test.to(torch.float32))
+                test_pred = torch.softmax(test_logits, dim=1).argmax(dim=1)
+            else:
+                test_pred = model(X_test)
+
+            # 2. Caculate loss and accuracy
+            if accuracy_fn is None:
+                test_loss = loss_fn(test_pred, y_test)
+            else:
+                test_loss = loss_fn(test_logits,
+                                    y_test)
+                test_acc = accuracy_fn(y_true=y_test,
+                                    y_pred=test_pred)
+
+            # Print out what's happening
+            if epoch % epoch_display_frequency == 0:
+                if accuracy_fn is None:
+                    print(f"Epoch: {epoch} | Loss: {loss:.5f} | Test loss: {test_loss:.5f}")
+                else:
+                    print(f"Epoch: {epoch} | Loss: {loss:.5f}, Accuracy: {acc:.2f}% | Test loss: {test_loss:.5f}, Test acc: {test_acc:.2f}%")
+
+def plot_train_test_decision_boundary(model:torch.nn.Module, X_train:torch.Tensor=X_train, y_train:torch.Tensor=y_train, X_test:torch.Tensor=X_test, y_test:torch.Tensor=y_test):
+    # Plot decision boundaries for training and test sets
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.title("Train")
+    plot_decision_boundary(model, X_train, y_train)
+    plt.subplot(1, 2, 2)
+    plt.title("Test")
+    plot_decision_boundary(model, X_test, y_test)
+

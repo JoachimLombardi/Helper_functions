@@ -435,13 +435,13 @@ def accuracy_fn(y_true, y_pred):
 def train_test_loop(epochs: int,
                     loss_fn: torch.nn.Module,
                     optimizer: torch.optim.Optimizer,    
-                    model: torch.nn.Module,
+                    model: torch.nn.Module,       
+                    X_train: torch.Tensor,
+                    y_train: torch.Tensor,
+                    X_test: torch.Tensor,
+                    y_test: torch.Tensor,
                     accuracy_fn=None,
-                    device: torch.device = device,
-                    X_train: torch.Tensor = X_train,
-                    y_train: torch.Tensor = y_train,
-                    X_test: torch.Tensor = X_test,
-                    y_test: torch.Tensor = y_test,
+                    device: torch.device = "cuda" if torch.cuda.is_available() else "cpu",     
                     epoch_display_frequency=10,
                     multiclass=False):
     """Trains and test a PyTorch model."""
@@ -514,7 +514,7 @@ def train_test_loop(epochs: int,
                 else:
                     print(f"Epoch: {epoch} | Loss: {loss:.5f}, Accuracy: {acc:.2f}% | Test loss: {test_loss:.5f}, Test acc: {test_acc:.2f}%")
 
-def plot_train_test_decision_boundary(model:torch.nn.Module, X_train:torch.Tensor=X_train, y_train:torch.Tensor=y_train, X_test:torch.Tensor=X_test, y_test:torch.Tensor=y_test):
+def plot_train_test_decision_boundary(model:torch.nn.Module, X_train:torch.Tensor, y_train:torch.Tensor, X_test:torch.Tensor, y_test:torch.Tensor):
     # Plot decision boundaries for training and test sets
     plt.figure(figsize=(12, 6))
     plt.subplot(1, 2, 1)

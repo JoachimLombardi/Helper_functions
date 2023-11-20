@@ -526,7 +526,16 @@ def plot_train_test_decision_boundary(model:torch.nn.Module, X_train:torch.Tenso
 
 # Calculate accuracy (a classification metric)
 def accuracy_fn(y_true, y_pred):
-    correct = torch.eq(y_true, y_pred).sum().item() # torch.eq() calculates where two tensors are equal
-    acc = (correct / len(y_pred)) * 100 
+    """Calculates accuracy between truth labels and predictions.
+
+    Args:
+        y_true (torch.Tensor): Truth labels for predictions.
+        y_pred (torch.Tensor): Predictions to be compared to predictions.
+
+    Returns:
+        [torch.float]: Accuracy value between y_true and y_pred, e.g. 78.45
+    """
+    correct = torch.eq(y_true, y_pred).sum().item()
+    acc = (correct / len(y_pred)) * 100
     return acc
 
